@@ -1,0 +1,17 @@
+{
+  "skills": {
+    "entries": {
+      "neutron-agent-memory": {
+        "enabled": true,
+        "apiKey": "YOUR_NEUTRON_API_KEY",
+        "env": {
+          "NEUTRON_APP_ID": "YOUR_APP_ID",
+          "NEUTRON_EXTERNAL_USER_ID": "1"
+        }
+      }
+    },
+    "load": {
+      "watch": true
+    }
+  }
+}

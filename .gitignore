@@ -1,0 +1,20 @@
+# Sensitive files
+openclaw.json
+*.env
+.env*
+credentials.json
+
+# Claude/OpenClaw internals
+.claude/
+.clawhub/
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node modules (if any)
+node_modules/
