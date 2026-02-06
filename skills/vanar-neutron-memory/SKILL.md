@@ -14,7 +14,7 @@ Persistent memory storage with semantic search for AI agents. Save text as seeds
 API credentials via environment variables:
 ```bash
 export NEUTRON_API_KEY=your_key
-export NEUTRON_AGENT_ID=your_app_id
+export NEUTRON_AGENT_ID=your_agent_id
 export NEUTRON_EXTERNAL_USER_ID=1  # optional, defaults to 1
 ```
 
@@ -22,7 +22,7 @@ Or stored in `~/.config/neutron/credentials.json`:
 ```json
 {
   "api_key": "your_key_here",
-  "app_id": "your_app_id_here",
+  "agent_id": "your_agent_id_here",
   "external_user_id": "1"
 }
 ```
