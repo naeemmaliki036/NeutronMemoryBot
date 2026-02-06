@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { config } from '@/lib/config';
+import { saveThreadAsSeed } from '@/lib/neutron-seeds';
 
 // In-memory store for replied comments (use Redis/DB in production)
 const repliedComments = new Set<string>();
@@ -56,6 +57,22 @@ async function handleNewComment(data: {
   const reply = generateReply(author.name, content);
   await postReply(post_id, reply);
   await saveToMemory(author.name, content, reply);
+
+  // Fetch full post for thread context, then save as seed
+  try {
+    const postRes = await fetch(`${config.moltbook.baseUrl}/posts/${post_id}`, {
+      headers: { 'Authorization': `Bearer ${config.moltbook.apiKey}` },
+      cache: 'no-store'
+    });
+    const postData = await postRes.json();
+    if (postData.success) {
+      const postContent = postData.content || '';
+      const comments = postData.comments || [];
+      await saveThreadAsSeed(postContent, comments, reply, author.name);
+    }
+  } catch (e) {
+    console.error('Error fetching post for seed:', e);
+  }
 
   repliedComments.add(comment_id);
 }

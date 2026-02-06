@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { config } from '@/lib/config';
+import { saveTextAsSeed } from '@/lib/neutron-seeds';
 
 export async function GET() {
   try {
@@ -48,6 +49,12 @@ export async function POST(request: Request) {
     });
 
     const data = await res.json();
+
+    // Also save as seed for semantic search (fire-and-forget)
+    const textContent = typeof memoryData === 'string'
+      ? memoryData
+      : JSON.stringify(memoryData);
+    saveTextAsSeed(textContent, `Memory: ${memoryType || 'episodic'}`).catch(() => {});
 
     return NextResponse.json({
       success: true,

@@ -7,6 +7,6 @@ export const config = {
   neutron: {
     apiKey: process.env.NEUTRON_API_KEY || '',
     appId: process.env.NEUTRON_APP_ID || '',
-    baseUrl: process.env.NEUTRON_BASE_URL || 'https://api-development.myneutron.ai'
+    baseUrl: process.env.NEUTRON_BASE_URL || 'https://api-neutron.vanarchain.com'
   }
 };

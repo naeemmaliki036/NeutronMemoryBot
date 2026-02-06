@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { config } from '@/lib/config';
+import { saveThreadAsSeed } from '@/lib/neutron-seeds';
 
 const POST_IDS = [
   'b6b51aae-f7fb-45a3-aa32-d4745f6025ef',
@@ -64,6 +65,12 @@ async function checkAndReplyToComments(postId: string) {
 
     if (success) {
       await saveToMemory(comment.author.name, comment.content, reply);
+
+      // Save full thread snapshot as seed for semantic search
+      const postContent = data.content || '';
+      const threadComments = comments.slice(0, comments.indexOf(comment) + 1);
+      await saveThreadAsSeed(postContent, threadComments, reply, comment.author.name);
+
       repliedComments.add(comment.id);
       newReplies.push({
         author: comment.author.name,

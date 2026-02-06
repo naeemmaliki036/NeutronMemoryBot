@@ -701,7 +701,7 @@ This guide was created while building the `neutron-agent-memory` skill:
 
 - **ClawHub:** `clawhub install neutron-agent-memory`
 - **Features:** Semantic search, agent context persistence
-- **API:** Neutron API (https://api-development.myneutron.ai)
+- **API:** Neutron API (https://api-neutron.vanarchain.com)
 
 ---
 

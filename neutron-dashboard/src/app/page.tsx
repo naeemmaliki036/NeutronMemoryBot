@@ -17,12 +17,21 @@ interface Memory {
   createdAt: string;
 }
 
+interface SeedResult {
+  seedId: string;
+  content: string;
+  similarity: number;
+}
+
 export default function Dashboard() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [memories, setMemories] = useState<Memory[]>([]);
   const [loading, setLoading] = useState(true);
   const [checking, setChecking] = useState(false);
   const [checkResult, setCheckResult] = useState<string | null>(null);
+  const [seedQuery, setSeedQuery] = useState('');
+  const [seedResults, setSeedResults] = useState<SeedResult[]>([]);
+  const [searching, setSearching] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -67,6 +76,25 @@ export default function Dashboard() {
       setCheckResult('Error checking comments');
     }
     setChecking(false);
+  }
+
+  async function searchSeeds() {
+    if (!seedQuery.trim()) return;
+    setSearching(true);
+    try {
+      const res = await fetch('/api/neutron/seeds', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: seedQuery, limit: 10, threshold: 0.5 })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSeedResults(data.results || []);
+      }
+    } catch (error) {
+      console.error('Seed search failed:', error);
+    }
+    setSearching(false);
   }
 
   const totalUpvotes = posts.reduce((acc, p) => acc + (p.upvotes || 0), 0);
@@ -156,6 +184,52 @@ export default function Dashboard() {
               </div>
             )}
           </div>
+        </div>
+
+        {/* Semantic Search */}
+        <div className="mt-8 bg-gray-800 rounded-xl p-6">
+          <h2 className="text-xl font-semibold mb-4 text-cyan-400">Semantic Search</h2>
+          <div className="flex gap-3 mb-4">
+            <input
+              type="text"
+              value={seedQuery}
+              onChange={(e) => setSeedQuery(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && searchSeeds()}
+              placeholder="Search interactions by meaning..."
+              className="flex-1 px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500"
+            />
+            <button
+              onClick={searchSeeds}
+              disabled={searching || !seedQuery.trim()}
+              className="px-6 py-3 bg-cyan-600 hover:bg-cyan-700 disabled:bg-gray-600 rounded-lg font-semibold transition-colors"
+            >
+              {searching ? 'Searching...' : 'Search'}
+            </button>
+          </div>
+
+          {seedResults.length > 0 && (
+            <div className="space-y-3 max-h-96 overflow-y-auto">
+              {seedResults.map((result, i) => (
+                <div key={result.seedId || i} className="bg-gray-700/50 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs text-gray-400">
+                      Seed: {result.seedId?.substring(0, 12)}...
+                    </span>
+                    <span className="px-2 py-1 bg-cyan-900 text-cyan-300 text-xs rounded">
+                      {(result.similarity * 100).toFixed(1)}% match
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-300 whitespace-pre-wrap">{result.content}</p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {seedResults.length === 0 && seedQuery && !searching && (
+            <p className="text-gray-500 text-sm">
+              No results found. Try a different search or wait for seeds to finish processing (5-30 seconds after creation).
+            </p>
+          )}
         </div>
 
         {/* Webhook Info */}

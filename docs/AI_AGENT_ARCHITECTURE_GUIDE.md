@@ -458,7 +458,7 @@ GATEWAY_TOKEN=126d6f...
 
 ```bash
 # Base URL (note: no /v1 prefix!)
-https://api-development.myneutron.ai
+https://api-neutron.vanarchain.com
 
 # Create Context
 POST /agent-contexts?appId={id}&externalUserId={user}

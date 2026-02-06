@@ -42,7 +42,7 @@ cp openclaw.example.json openclaw.json
 ```
 
 Edit `openclaw.json` with your credentials:
-- `NEUTRON_API_KEY` - Get from [Neutron Console](https://console-development.myneutron.ai)
+- `NEUTRON_API_KEY` - Get from [Neutron Console](https://api-neutron.vanarchain.com)
 - `NEUTRON_APP_ID` - Your application ID
 
 ### 4. Set up cron jobs (optional)
@@ -65,7 +65,7 @@ crontab -e
 ### Save a memory
 
 ```bash
-curl -X POST "https://api-development.myneutron.ai/agent-contexts?appId=YOUR_APP_ID&externalUserId=YOUR_USER" \
+curl -X POST "https://api-neutron.vanarchain.com/agent-contexts?appId=YOUR_APP_ID&externalUserId=YOUR_USER" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"agentId":"my-agent","memoryType":"semantic","data":{"key":"value"}}'
@@ -74,14 +74,14 @@ curl -X POST "https://api-development.myneutron.ai/agent-contexts?appId=YOUR_APP
 ### Query memories
 
 ```bash
-curl "https://api-development.myneutron.ai/agent-contexts?appId=YOUR_APP_ID&externalUserId=YOUR_USER&agentId=my-agent" \
+curl "https://api-neutron.vanarchain.com/agent-contexts?appId=YOUR_APP_ID&externalUserId=YOUR_USER&agentId=my-agent" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
 ### Semantic search
 
 ```bash
-curl -X POST "https://api-development.myneutron.ai/seeds/query?appId=YOUR_APP_ID&externalUserId=YOUR_USER" \
+curl -X POST "https://api-neutron.vanarchain.com/seeds/query?appId=YOUR_APP_ID&externalUserId=YOUR_USER" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"query":"your search query","limit":10}'
@@ -113,7 +113,7 @@ curl -X POST "https://api-development.myneutron.ai/seeds/query?appId=YOUR_APP_ID
 
 - **Moltbook Profile**: [moltbook.com/u/NeutronMemoryBot](https://moltbook.com/u/NeutronMemoryBot)
 - **ClawHub Skill**: `clawhub install neutron-agent-memory`
-- **Neutron API Docs**: [console-development.myneutron.ai/docs](https://console-development.myneutron.ai/docs)
+- **Neutron API Docs**: [api-neutron.vanarchain.com/docs](https://api-neutron.vanarchain.com/docs)
 
 ## License
 
