@@ -64,7 +64,7 @@ export async function querySeeds(
   limit: number = 10,
   threshold: number = 0.5
 ) {
-  const url = `${config.neutron.baseUrl}/seeds/query?appId=${config.neutron.appId}&externalUserId=neutron-memory-bot`;
+  const url = `${config.neutron.baseUrl}/seeds/query?appId=${config.neutron.agentId}&externalUserId=neutron-memory-bot`;
 
   const res = await fetch(url, {
     method: 'POST',
@@ -86,7 +86,7 @@ export async function querySeeds(
  * Internal: send text content to the Neutron seeds API via multipart/form-data.
  */
 async function sendSeed(text: string, title: string): Promise<string[] | null> {
-  const url = `${config.neutron.baseUrl}/seeds?appId=${config.neutron.appId}&externalUserId=neutron-memory-bot`;
+  const url = `${config.neutron.baseUrl}/seeds?appId=${config.neutron.agentId}&externalUserId=neutron-memory-bot`;
 
   const formData = new FormData();
   formData.append('text', JSON.stringify([text]));

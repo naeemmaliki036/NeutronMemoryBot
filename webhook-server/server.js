@@ -19,7 +19,7 @@ const CONFIG = {
   },
   neutron: {
     apiKey: process.env.NEUTRON_API_KEY || 'nk_231d6d0dd5db7129d494607e3b7d4d965496a07b4a73ee07e8e0eeae2bfa7510',
-    appId: process.env.NEUTRON_APP_ID || '5925f30c-135c-4e10-b275-edf0936ef4be',
+    agentId: process.env.NEUTRON_AGENT_ID || '5925f30c-135c-4e10-b275-edf0936ef4be',
     baseUrl: 'https://api-neutron.vanarchain.com'
   }
 };
@@ -298,7 +298,7 @@ async function postReply(postId, content) {
 // Save interaction to Neutron memory
 async function saveToMemory(author, theirComment, myReply) {
   try {
-    const url = `${CONFIG.neutron.baseUrl}/agent-contexts?appId=${CONFIG.neutron.appId}&externalUserId=neutron-memory-bot`;
+    const url = `${CONFIG.neutron.baseUrl}/agent-contexts?appId=${CONFIG.neutron.agentId}&externalUserId=neutron-memory-bot`;
 
     await fetch(url, {
       method: 'POST',
@@ -340,7 +340,7 @@ async function saveThreadAsSeed(postContent, comments, botReply, replyAuthor) {
     ].join('\n');
 
     const title = `Thread with ${replyAuthor} - ${new Date().toISOString().split('T')[0]}`;
-    const url = `${CONFIG.neutron.baseUrl}/seeds?appId=${CONFIG.neutron.appId}&externalUserId=neutron-memory-bot`;
+    const url = `${CONFIG.neutron.baseUrl}/seeds?appId=${CONFIG.neutron.agentId}&externalUserId=neutron-memory-bot`;
 
     const formData = new FormData();
     formData.append('text', JSON.stringify([fullText]));

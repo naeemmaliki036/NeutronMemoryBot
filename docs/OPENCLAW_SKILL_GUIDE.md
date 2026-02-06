@@ -485,7 +485,7 @@ Add to `~/.zshrc` or `~/.bashrc`:
 ```bash
 export YOUR_API_KEY="your-api-key-here"
 export NEUTRON_API_KEY="your-neutron-key"
-export NEUTRON_APP_ID="your-app-id"
+export NEUTRON_AGENT_ID="your-app-id"
 ```
 
 Then reload:

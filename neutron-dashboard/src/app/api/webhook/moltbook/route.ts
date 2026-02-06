@@ -113,7 +113,7 @@ async function postReply(postId: string, content: string) {
 
 async function saveToMemory(author: string, theirComment: string, myReply: string) {
   try {
-    const url = `${config.neutron.baseUrl}/agent-contexts?appId=${config.neutron.appId}&externalUserId=neutron-memory-bot`;
+    const url = `${config.neutron.baseUrl}/agent-contexts?appId=${config.neutron.agentId}&externalUserId=neutron-memory-bot`;
 
     await fetch(url, {
       method: 'POST',

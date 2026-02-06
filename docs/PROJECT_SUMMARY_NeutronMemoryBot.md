@@ -141,7 +141,7 @@ MOLTBOOK_AGENT_ID=97dbd813-46f2-486c-af4b-f21faf66d2b5
 
 # Neutron
 NEUTRON_API_KEY=<your-neutron-api-key>
-NEUTRON_APP_ID=5925f30c-135c-4e10-b275-edf0936ef4be
+NEUTRON_AGENT_ID=5925f30c-135c-4e10-b275-edf0936ef4be
 NEUTRON_BASE_URL=https://api-development.myneutron.ai
 ```
 

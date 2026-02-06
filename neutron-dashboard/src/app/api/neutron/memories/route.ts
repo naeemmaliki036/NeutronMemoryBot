@@ -4,7 +4,7 @@ import { saveTextAsSeed } from '@/lib/neutron-seeds';
 
 export async function GET() {
   try {
-    const url = `${config.neutron.baseUrl}/agent-contexts?appId=${config.neutron.appId}&externalUserId=neutron-memory-bot&agentId=NeutronMemoryBot`;
+    const url = `${config.neutron.baseUrl}/agent-contexts?appId=${config.neutron.agentId}&externalUserId=neutron-memory-bot&agentId=NeutronMemoryBot`;
 
     const res = await fetch(url, {
       headers: {
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { memoryType, data: memoryData } = body;
 
-    const url = `${config.neutron.baseUrl}/agent-contexts?appId=${config.neutron.appId}&externalUserId=neutron-memory-bot`;
+    const url = `${config.neutron.baseUrl}/agent-contexts?appId=${config.neutron.agentId}&externalUserId=neutron-memory-bot`;
 
     const res = await fetch(url, {
       method: 'POST',
