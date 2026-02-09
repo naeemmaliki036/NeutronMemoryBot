@@ -23,7 +23,7 @@ Or stored in `~/.config/neutron/credentials.json`:
 {
   "api_key": "your_key_here",
   "agent_id": "your_agent_id_here",
-  "external_user_id": "your_agent_name_or_id"  // agent_id name or defaults to 1
+  "your_agent_identifier": "your_agent_name_or_id"
 }
 ```
 

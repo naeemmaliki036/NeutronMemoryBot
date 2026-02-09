@@ -13,11 +13,11 @@ if [[ -z "$API_KEY" || -z "$APP_ID" ]] && [[ -f "$CONFIG_FILE" ]]; then
     if command -v jq &> /dev/null; then
         [[ -z "$API_KEY" ]] && API_KEY=$(jq -r '.api_key // empty' "$CONFIG_FILE" 2>/dev/null)
         [[ -z "$APP_ID" ]] && APP_ID=$(jq -r '.agent_id // empty' "$CONFIG_FILE" 2>/dev/null)
-        [[ -z "$EXTERNAL_USER_ID" ]] && EXTERNAL_USER_ID=$(jq -r '.external_user_id // empty' "$CONFIG_FILE" 2>/dev/null)
+        [[ -z "$EXTERNAL_USER_ID" ]] && EXTERNAL_USER_ID=$(jq -r '.your_agent_identifier // empty' "$CONFIG_FILE" 2>/dev/null)
     else
         [[ -z "$API_KEY" ]] && API_KEY=$(grep '"api_key"' "$CONFIG_FILE" | sed 's/.*"api_key"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/')
         [[ -z "$APP_ID" ]] && APP_ID=$(grep '"agent_id"' "$CONFIG_FILE" | sed 's/.*"agent_id"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/')
-        [[ -z "$EXTERNAL_USER_ID" ]] && EXTERNAL_USER_ID=$(grep '"external_user_id"' "$CONFIG_FILE" | sed 's/.*"external_user_id"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/')
+        [[ -z "$EXTERNAL_USER_ID" ]] && EXTERNAL_USER_ID=$(grep '"your_agent_identifier"' "$CONFIG_FILE" | sed 's/.*"your_agent_identifier"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/')
     fi
 fi
 
@@ -34,7 +34,7 @@ if [[ -z "$API_KEY" || "$API_KEY" == "null" ]]; then
     echo ""
     echo "Option 2 - Credentials file:"
     echo "  mkdir -p ~/.config/neutron"
-    echo '  echo '"'"'{"api_key":"your_key","agent_id":"your_agent_id","external_user_id":"1"}'"'"' > ~/.config/neutron/credentials.json'
+    echo '  echo '"'"'{"api_key":"your_key","agent_id":"your_agent_id","your_agent_identifier":"1"}'"'"' > ~/.config/neutron/credentials.json'
     exit 1
 fi
 
