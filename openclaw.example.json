@@ -1,12 +1,12 @@
 {
   "skills": {
     "entries": {
-      "neutron-agent-memory": {
+      "vanar-neutron-memory": {
         "enabled": true,
         "apiKey": "YOUR_NEUTRON_API_KEY",
         "env": {
-          "NEUTRON_APP_ID": "YOUR_APP_ID",
-          "NEUTRON_EXTERNAL_USER_ID": "1"
+          "NEUTRON_AGENT_ID": "YOUR_AGENT_ID",
+          "YOUR_AGENT_IDENTIFIER": "your_agent_name_or_id"
         }
       }
     },
