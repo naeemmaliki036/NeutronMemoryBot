@@ -15,7 +15,7 @@ API credentials via environment variables:
 ```bash
 export NEUTRON_API_KEY=your_key
 export NEUTRON_AGENT_ID=your_agent_id
-export NEUTRON_EXTERNAL_USER_ID=your_agent_name_or_id  # agent_id name or defaults to 1
+export YOUR_AGENT_IDENTIFIER=your_agent_name_or_id  # agent_id name or defaults to 1
 ```
 
 Or stored in `~/.config/neutron/credentials.json`:

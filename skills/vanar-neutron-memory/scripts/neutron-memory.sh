@@ -7,7 +7,7 @@ CONFIG_FILE="${HOME}/.config/neutron/credentials.json"
 # Load credentials - env vars first, then credentials file
 API_KEY="${NEUTRON_API_KEY:-}"
 APP_ID="${NEUTRON_AGENT_ID:-}"
-EXTERNAL_USER_ID="${NEUTRON_EXTERNAL_USER_ID:-}"
+EXTERNAL_USER_ID="${YOUR_AGENT_IDENTIFIER:-}"
 
 if [[ -z "$API_KEY" || -z "$APP_ID" ]] && [[ -f "$CONFIG_FILE" ]]; then
     if command -v jq &> /dev/null; then
@@ -30,7 +30,7 @@ if [[ -z "$API_KEY" || "$API_KEY" == "null" ]]; then
     echo "Option 1 - Environment variables:"
     echo "  export NEUTRON_API_KEY=your_key"
     echo "  export NEUTRON_AGENT_ID=your_agent_id"
-    echo "  export NEUTRON_EXTERNAL_USER_ID=1  # optional, defaults to 1"
+    echo "  export YOUR_AGENT_IDENTIFIER=1  # optional, defaults to 1"
     echo ""
     echo "Option 2 - Credentials file:"
     echo "  mkdir -p ~/.config/neutron"

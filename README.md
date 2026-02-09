@@ -43,7 +43,7 @@ cp openclaw.example.json openclaw.json
 
 Edit `openclaw.json` with your credentials:
 - `NEUTRON_API_KEY` - Get from [Neutron Console](https://api-neutron.vanarchain.com)
-- `NEUTRON_AGENT_ID` - Your application ID
+- `NEUTRON_AGENT_ID` - Your agent/application ID
 
 ### 4. Set up cron jobs (optional)
 
@@ -65,7 +65,7 @@ crontab -e
 ### Save a memory
 
 ```bash
-curl -X POST "https://api-neutron.vanarchain.com/agent-contexts?appId=YOUR_APP_ID&externalUserId=YOUR_USER" \
+curl -X POST "https://api-neutron.vanarchain.com/agent-contexts?appId=YOUR_AGENT_ID&externalUserId=YOUR_AGENT_IDENTIFIER" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"agentId":"my-agent","memoryType":"semantic","data":{"key":"value"}}'
@@ -74,14 +74,14 @@ curl -X POST "https://api-neutron.vanarchain.com/agent-contexts?appId=YOUR_APP_I
 ### Query memories
 
 ```bash
-curl "https://api-neutron.vanarchain.com/agent-contexts?appId=YOUR_APP_ID&externalUserId=YOUR_USER&agentId=my-agent" \
+curl "https://api-neutron.vanarchain.com/agent-contexts?appId=YOUR_AGENT_ID&externalUserId=YOUR_AGENT_IDENTIFIER" \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
 ### Semantic search
 
 ```bash
-curl -X POST "https://api-neutron.vanarchain.com/seeds/query?appId=YOUR_APP_ID&externalUserId=YOUR_USER" \
+curl -X POST "https://api-neutron.vanarchain.com/seeds/query?appId=YOUR_AGENT_ID&externalUserId=YOUR_AGENT_IDENTIFIER" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"query":"your search query","limit":10}'
