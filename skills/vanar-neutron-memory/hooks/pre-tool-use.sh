@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Auto-Recall: Query memories before AI turn and inject as context
 
-# Check if auto-recall is enabled (default: true)
-VANAR_AUTO_RECALL="${VANAR_AUTO_RECALL:-true}"
+# Check if auto-recall is enabled (default: false — opt-in only)
+VANAR_AUTO_RECALL="${VANAR_AUTO_RECALL:-false}"
 [[ "$VANAR_AUTO_RECALL" != "true" ]] && exit 0
 
 set -euo pipefail
@@ -11,7 +11,7 @@ API_BASE="${NEUTRON_API_BASE:-https://api-neutron.vanarchain.com}"
 CONFIG_FILE="${HOME}/.config/neutron/credentials.json"
 
 # Load API key
-API_KEY="${NEUTRON_API_KEY:-}"
+API_KEY="${API_KEY:-${NEUTRON_API_KEY:-}}"
 
 if [[ -z "$API_KEY" ]] && [[ -f "$CONFIG_FILE" ]]; then
     API_KEY=$(jq -r '.api_key // empty' "$CONFIG_FILE" 2>/dev/null || true)

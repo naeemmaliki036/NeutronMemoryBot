@@ -42,8 +42,7 @@ cp openclaw.example.json openclaw.json
 ```
 
 Edit `openclaw.json` with your credentials:
-- `NEUTRON_API_KEY` - Get from [Neutron Console](https://api-neutron.vanarchain.com)
-- `NEUTRON_AGENT_ID` - Your agent/application ID
+- `API_KEY` - Get from [Neutron Console](https://openclaw.vanarchain.com)
 
 ### 4. Set up cron jobs (optional)
 

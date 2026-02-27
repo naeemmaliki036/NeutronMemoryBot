@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 # Auto-Capture: Save conversation after AI turn
 
-# Check if auto-capture is enabled (default: true)
-VANAR_AUTO_CAPTURE="${VANAR_AUTO_CAPTURE:-true}"
+# Check if auto-capture is enabled (default: false — opt-in only)
+VANAR_AUTO_CAPTURE="${VANAR_AUTO_CAPTURE:-false}"
 [[ "$VANAR_AUTO_CAPTURE" != "true" ]] && exit 0
 
 API_BASE="${NEUTRON_API_BASE:-https://api-neutron.vanarchain.com}"
 CONFIG_FILE="${HOME}/.config/neutron/credentials.json"
 
-API_KEY="${NEUTRON_API_KEY:-}"
+API_KEY="${API_KEY:-${NEUTRON_API_KEY:-}}"
 
 if [[ -z "$API_KEY" ]] && [[ -f "$CONFIG_FILE" ]]; then
     API_KEY=$(jq -r '.api_key // empty' "$CONFIG_FILE" 2>/dev/null || true)
@@ -31,4 +31,4 @@ curl -s -X POST "${API_BASE}/memory/save" \
     -F "text=[\"${CONTENT}\"]" \
     -F 'textTypes=["text"]' \
     -F 'textSources=["auto_capture"]' \
-    -F "textTitles=[\"${TITLE}\"]" > /dev/null 2>&1 &
+    -F "textTitles=[\"${TITLE}\"]" > /dev/null 2>&1

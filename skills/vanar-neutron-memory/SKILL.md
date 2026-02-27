@@ -2,7 +2,7 @@
 name: vanar-neutron-memory
 description: Your AI remembers every conversation — finds relevant context by meaning, not keywords. Fully automatic.
 user-invocable: true
-metadata: {"openclaw": {"emoji": "🧠", "requires": {"env": ["NEUTRON_API_KEY"]}, "primaryEnv": "NEUTRON_API_KEY"}}
+metadata: {"openclaw": {"emoji": "🧠", "requires": {"env": ["API_KEY"]}, "primaryEnv": "API_KEY"}}
 ---
 
 # Neutron Memory
@@ -23,7 +23,7 @@ No manual work — it just works once installed.
 See **[SETUP.md](SETUP.md)** for the full setup guide. TL;DR:
 
 1. Get a free API key at **https://openclaw.vanarchain.com/** ($20 free credits, no credit card)
-2. `export NEUTRON_API_KEY=nk_your_key`
+2. `export API_KEY=nk_your_key`
 3. `./scripts/neutron-memory.sh test`
 
 ## Commands
@@ -52,11 +52,11 @@ Checks all prerequisites: curl, jq, API key, connectivity, and authentication.
 - `hooks/pre-tool-use.sh` — **Auto-Recall**: Queries memories before AI turn, injects relevant context
 - `hooks/post-tool-use.sh` — **Auto-Capture**: Saves conversation after AI turn
 
-Both are **enabled by default**. To disable:
+Both are **disabled by default** (opt-in only). To enable:
 
 ```bash
-export VANAR_AUTO_RECALL=false
-export VANAR_AUTO_CAPTURE=false
+export VANAR_AUTO_RECALL=true
+export VANAR_AUTO_CAPTURE=true
 ```
 
 ## API Endpoints
@@ -64,11 +64,13 @@ export VANAR_AUTO_CAPTURE=false
 - `POST /memory/save` — Save text (multipart/form-data)
 - `POST /memory/search` — Semantic search (JSON body)
 
-**Auth:** `Authorization: Bearer $NEUTRON_API_KEY` — that's it. No other credentials needed.
+**Auth:** `Authorization: Bearer $API_KEY` — that's it. No other credentials needed.
 
 ## Security & Privacy
 
-This skill only sends data you explicitly save (or auto-captured conversations) to the Neutron API. Here's exactly what happens:
+**No data is sent unless you run a command or explicitly enable auto-capture/auto-recall.** Both hooks are disabled by default.
+
+This skill only sends data you explicitly save (or opt-in auto-captured conversations) to the Neutron API. Here's exactly what happens:
 
 | Action | What's sent | Where |
 |--------|------------|-------|

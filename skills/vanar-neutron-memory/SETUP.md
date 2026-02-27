@@ -25,12 +25,12 @@ Pick one of these options:
 
 **Option A — Environment variable** (recommended):
 ```bash
-export NEUTRON_API_KEY=nk_your_key_here
+export API_KEY=nk_your_key_here
 ```
 
 Add to your `~/.zshrc` or `~/.bashrc` to persist across sessions:
 ```bash
-echo 'export NEUTRON_API_KEY=nk_your_key_here' >> ~/.zshrc
+echo 'export API_KEY=nk_your_key_here' >> ~/.zshrc
 source ~/.zshrc
 ```
 
@@ -76,16 +76,16 @@ Wait ~15 seconds, then search:
 
 You should get back the saved memory matched by meaning — not keywords.
 
-## Auto-Recall & Auto-Capture
+## Auto-Recall & Auto-Capture (Opt-In)
 
-Once installed, the skill automatically:
-- **Recalls** relevant memories before each AI turn (injects as context)
-- **Captures** conversations after each AI turn (saves to memory)
+These optional features automate memory management:
+- **Auto-Recall**: Queries relevant memories before each AI turn and injects as context
+- **Auto-Capture**: Saves conversations after each AI turn to memory
 
-Both are on by default. To disable:
+Both are **off by default**. To enable:
 ```bash
-export VANAR_AUTO_RECALL=false
-export VANAR_AUTO_CAPTURE=false
+export VANAR_AUTO_RECALL=true
+export VANAR_AUTO_CAPTURE=true
 ```
 
 ## Credits
@@ -101,7 +101,7 @@ Your free account includes $20 of trial credits. Credits are consumed by save an
 
 | Problem | Fix |
 |---------|-----|
-| `NEUTRON_API_KEY not found` | Set the env var or create credentials file (see Step 2) |
+| `API_KEY not found` | Set the env var or create credentials file (see Step 2) |
 | `API connection failed` | Check your API key is correct at https://openclaw.vanarchain.com/manage |
 | Search returns no results | Memories take 10-30s to process after saving — wait and retry |
 | `jq: command not found` | Install jq: `brew install jq` (macOS) or `apt install jq` (Linux) |

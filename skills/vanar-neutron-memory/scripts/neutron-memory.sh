@@ -20,7 +20,7 @@ if ! command -v jq &> /dev/null; then
 fi
 
 # --- Load API key — env var first, then credentials file ---
-API_KEY="${NEUTRON_API_KEY:-}"
+API_KEY="${API_KEY:-${NEUTRON_API_KEY:-}}"
 
 if [[ -z "$API_KEY" ]] && [[ -f "$CONFIG_FILE" ]]; then
     if command -v jq &> /dev/null; then
@@ -31,12 +31,12 @@ if [[ -z "$API_KEY" ]] && [[ -f "$CONFIG_FILE" ]]; then
 fi
 
 if [[ -z "$API_KEY" || "$API_KEY" == "null" ]]; then
-    echo "Error: NEUTRON_API_KEY not found"
+    echo "Error: API_KEY not found"
     echo ""
     echo "Get your API key at: https://openclaw.vanarchain.com/"
     echo ""
     echo "Option 1 - Environment variable:"
-    echo "  export NEUTRON_API_KEY=nk_your_key"
+    echo "  export API_KEY=nk_your_key"
     echo ""
     echo "Option 2 - Credentials file:"
     echo "  mkdir -p ~/.config/neutron"
@@ -203,7 +203,7 @@ case "${1:-}" in
         if [[ -n "$API_KEY" && "$API_KEY" != "null" ]]; then
             echo "OK (${API_KEY:0:7}...)"
         else
-            echo "MISSING — run: export NEUTRON_API_KEY=nk_your_key"
+            echo "MISSING — run: export API_KEY=nk_your_key"
         fi
 
         # Check credentials file
