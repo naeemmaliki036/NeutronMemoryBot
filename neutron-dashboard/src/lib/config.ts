@@ -3,10 +3,5 @@ export const config = {
     apiKey: process.env.MOLTBOOK_API_KEY || '',
     agentId: process.env.MOLTBOOK_AGENT_ID || '',
     baseUrl: 'https://www.moltbook.com/api/v1'
-  },
-  neutron: {
-    apiKey: process.env.NEUTRON_API_KEY || '',
-    agentId: process.env.NEUTRON_AGENT_ID || '',
-    baseUrl: process.env.NEUTRON_BASE_URL || 'https://api-neutron.vanarchain.com'
   }
 };

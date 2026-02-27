@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeutronMemoryBot - Operations Guide</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg-surface: #f4f4f5;
+      --text: #18181b;
+      --text-muted: #52525b;
+      --heading: #09090b;
+      --h2: #6d28d9;
+      --h3: #7c3aed;
+      --accent: #7c3aed;
+      --link: #6d28d9;
+      --code-bg: #f4f4f5;
+      --code-text: #0e7490;
+      --pre-bg: #fafafa;
+      --pre-text: #27272a;
+      --pre-border: #e4e4e7;
+      --border: #e4e4e7;
+      --th-bg: #f4f4f5;
+      --th-text: #6d28d9;
+      --hover-bg: #f9fafb;
+      --note-bg: #ede9fe;
+      --note-border: #7c3aed;
+      --warn-bg: #fef3c7;
+      --warn-border: #f59e0b;
+      --toggle-bg: #e4e4e7;
+      --toggle-knob: #ffffff;
+    }
+
+    [data-theme="dark"] {
+      --bg: #09090b;
+      --bg-surface: #18181b;
+      --text: #e4e4e7;
+      --text-muted: #a1a1aa;
+      --heading: #f4f4f5;
+      --h2: #a78bfa;
+      --h3: #c4b5fd;
+      --accent: #7c3aed;
+      --link: #818cf8;
+      --code-bg: #18181b;
+      --code-text: #a5f3fc;
+      --pre-bg: #18181b;
+      --pre-text: #d4d4d8;
+      --pre-border: #27272a;
+      --border: #27272a;
+      --th-bg: #18181b;
+      --th-text: #a78bfa;
+      --hover-bg: #18181b;
+      --note-bg: #1e1b4b;
+      --note-border: #7c3aed;
+      --warn-bg: #451a03;
+      --warn-border: #f59e0b;
+      --toggle-bg: #3f3f46;
+      --toggle-knob: #e4e4e7;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: var(--text); background: var(--bg); padding: 2rem; max-width: 900px; margin: 0 auto; transition: background 0.3s, color 0.3s; }
+    h1 { font-size: 2rem; color: var(--heading); margin-bottom: 2rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.5rem; }
+    h2 { font-size: 1.5rem; color: var(--h2); margin: 2.5rem 0 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.4rem; }
+    h3 { font-size: 1.1rem; color: var(--h3); margin: 1.5rem 0 0.5rem; }
+    p { margin-bottom: 0.8rem; }
+    a { color: var(--link); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code { background: var(--code-bg); color: var(--code-text); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.9em; font-family: 'SF Mono', 'Fira Code', monospace; }
+    pre { background: var(--pre-bg); border: 1px solid var(--pre-border); border-radius: 8px; padding: 1rem; overflow-x: auto; margin: 0.8rem 0 1.2rem; }
+    pre code { background: none; padding: 0; color: var(--pre-text); }
+    table { width: 100%; border-collapse: collapse; margin: 0.8rem 0 1.2rem; }
+    th { background: var(--th-bg); color: var(--th-text); text-align: left; padding: 0.6rem 0.8rem; border: 1px solid var(--border); font-weight: 600; }
+    td { padding: 0.6rem 0.8rem; border: 1px solid var(--border); }
+    tr:hover td { background: var(--hover-bg); }
+    hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+    ul, ol { margin: 0.5rem 0 1rem 1.5rem; }
+    li { margin-bottom: 0.3rem; }
+    strong { color: var(--heading); }
+    .note { background: var(--note-bg); border-left: 3px solid var(--note-border); padding: 0.8rem 1rem; border-radius: 0 6px 6px 0; margin: 0.8rem 0; }
+    .warn { background: var(--warn-bg); border-left: 3px solid var(--warn-border); padding: 0.8rem 1rem; border-radius: 0 6px 6px 0; margin: 0.8rem 0; }
+
+    /* Theme toggle */
+    .theme-toggle { position: fixed; top: 1.2rem; right: 1.5rem; display: flex; align-items: center; gap: 0.5rem; z-index: 100; }
+    .theme-toggle span { font-size: 0.85rem; color: var(--text-muted); }
+    .toggle-switch { position: relative; width: 48px; height: 26px; cursor: pointer; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-track { position: absolute; inset: 0; background: var(--toggle-bg); border-radius: 13px; transition: background 0.3s; }
+    .toggle-knob { position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; background: var(--toggle-knob); border-radius: 50%; transition: transform 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+    .toggle-switch input:checked + .toggle-track { background: var(--accent); }
+    .toggle-switch input:checked + .toggle-track .toggle-knob { transform: translateX(22px); }
+  </style>
+</head>
+<body>
+
+<div class="theme-toggle">
+  <span id="theme-label">Dark</span>
+  <label class="toggle-switch">
+    <input type="checkbox" id="theme-switch" checked>
+    <div class="toggle-track"><div class="toggle-knob"></div></div>
+  </label>
+</div>
+
+<h1>NeutronMemoryBot - Operations Guide</h1>
+
+<!-- 1. Prerequisites -->
+<h2>1. Prerequisites</h2>
+
+<h3>API Keys</h3>
+<p>You need two sets of credentials:</p>
+<table>
+  <tr><th>Service</th><th>Where to get</th><th>Env vars</th></tr>
+  <tr><td><strong>Neutron</strong> (memory)</td><td><a href="https://openclaw.vanarchain.com/">openclaw.vanarchain.com</a></td><td><code>NEUTRON_API_KEY</code>, <code>NEUTRON_AGENT_ID</code></td></tr>
+  <tr><td><strong>Moltbook</strong> (social)</td><td><a href="https://www.moltbook.com">moltbook.com</a></td><td><code>MOLTBOOK_API_KEY</code>, <code>MOLTBOOK_AGENT_ID</code></td></tr>
+</table>
+
+<h3>Credential Files</h3>
+<p>Credentials are stored in three places (all should match):</p>
+<pre><code>.env                          # Root (shared)
+webhook-server/.env           # Webhook server
+neutron-dashboard/.env.local  # Dashboard</code></pre>
+
+<p>The skill also reads <code>openclaw.json</code> for Neutron credentials:</p>
+<pre><code>{
+  "skills": {
+    "entries": {
+      "vanar-neutron-memory": {
+        "enabled": true,
+        "apiKey": "nk_your_key_here",
+        "env": {
+          "NEUTRON_AGENT_ID": "your-agent-id",
+          "YOUR_AGENT_IDENTIFIER": "NeutronMemoryBot",
+          "VANAR_AUTO_RECALL": "true",
+          "VANAR_AUTO_CAPTURE": "true"
+        }
+      }
+    }
+  }
+}</code></pre>
+
+<h3>Dependencies</h3>
+<pre><code># Webhook server
+cd webhook-server &amp;&amp; npm install
+
+# Dashboard
+cd neutron-dashboard &amp;&amp; npm install</code></pre>
+
+<hr>
+
+<!-- 2. Test the Skill CLI -->
+<h2>2. Test the Skill CLI</h2>
+<p>All commands use the script at <code>skills/vanar-neutron-memory/scripts/neutron-memory.sh</code>.</p>
+
+<h3>Test API Connection</h3>
+<pre><code>./skills/vanar-neutron-memory/scripts/neutron-memory.sh test</code></pre>
+<p>Expected: <code>API connection successful</code></p>
+
+<h3>Save a Seed</h3>
+<pre><code>./skills/vanar-neutron-memory/scripts/neutron-memory.sh save "Hello from NeutronMemoryBot" "My First Seed"</code></pre>
+<p>Expected: <code>{ "jobIds": ["..."], "message": "Created 1 seed processing jobs" }</code></p>
+
+<h3>Search Seeds (wait ~15s after saving)</h3>
+<pre><code>./skills/vanar-neutron-memory/scripts/neutron-memory.sh search "hello" 5 0.5</code></pre>
+<p>Arguments: <code>QUERY</code> <code>LIMIT</code> <code>THRESHOLD(0-1)</code></p>
+<p>Expected: Results array with <code>content</code>, <code>similarity</code>, <code>seedId</code></p>
+
+<h3>Create Agent Context</h3>
+<pre><code>./skills/vanar-neutron-memory/scripts/neutron-memory.sh context-create "NeutronMemoryBot" "episodic" '{"interaction":"test interaction"}'</code></pre>
+<p>Memory types: <code>episodic</code>, <code>semantic</code>, <code>procedural</code>, <code>working</code></p>
+
+<h3>List Agent Contexts</h3>
+<pre><code>./skills/vanar-neutron-memory/scripts/neutron-memory.sh context-list "NeutronMemoryBot"</code></pre>
+
+<h3>Get Specific Context</h3>
+<pre><code>./skills/vanar-neutron-memory/scripts/neutron-memory.sh context-get &lt;CONTEXT_ID&gt;</code></pre>
+
+<hr>
+
+<!-- 3. Start the Bot -->
+<h2>3. Start the Bot (Webhook Server)</h2>
+<pre><code>cd webhook-server
+node server.js</code></pre>
+
+<p>Output:</p>
+<pre><code>NeutronMemoryBot Webhook Server
+  Status:    Running
+  Port:      3456
+  Webhook:   POST /webhook/moltbook
+  Health:    GET /health
+  Trigger:   POST /trigger/check-all
+Starting polling mode (every 60s)</code></pre>
+
+<p>The server does two things:</p>
+<ul>
+  <li><strong>Listens</strong> for Moltbook webhooks on <code>/webhook/moltbook</code></li>
+  <li><strong>Polls</strong> Moltbook every 60s for new comments (fallback mode)</li>
+</ul>
+
+<h3>Environment Variables</h3>
+<table>
+  <tr><th>Var</th><th>Default</th><th>Description</th></tr>
+  <tr><td><code>PORT</code></td><td><code>3456</code></td><td>Server port</td></tr>
+  <tr><td><code>ENABLE_POLLING</code></td><td><code>true</code></td><td>Set <code>false</code> to disable polling</td></tr>
+</table>
+
+<hr>
+
+<!-- 4. Test the Bot -->
+<h2>4. Test the Bot</h2>
+
+<h3>Health Check</h3>
+<pre><code>curl http://localhost:3456/health</code></pre>
+
+<h3>Trigger Comment Check (all posts)</h3>
+<pre><code>curl -X POST http://localhost:3456/trigger/check-all</code></pre>
+<p>This checks hardcoded post IDs for new comments, replies, and saves interactions to Neutron.</p>
+
+<h3>Trigger Single Post</h3>
+<pre><code>curl -X POST http://localhost:3456/trigger/check-comments \
+  -H "Content-Type: application/json" \
+  -d '{"postId":"YOUR_POST_ID"}'</code></pre>
+
+<h3>Simulate a Webhook Event</h3>
+<pre><code>curl -X POST http://localhost:3456/webhook/moltbook \
+  -H "Content-Type: application/json" \
+  -d '{
+    "event": "comment.created",
+    "data": {
+      "comment_id": "test-123",
+      "post_id": "b6b51aae-f7fb-45a3-aa32-d4745f6025ef",
+      "author": {"id": "other-agent", "name": "TestAgent"},
+      "content": "Tell me about memory types"
+    }
+  }'</code></pre>
+
+<h3>Verify Interactions Were Saved</h3>
+<p>After triggering, check that memories were stored:</p>
+<pre><code># Search seeds
+./skills/vanar-neutron-memory/scripts/neutron-memory.sh search "replied" 5 0.5
+
+# List contexts
+./skills/vanar-neutron-memory/scripts/neutron-memory.sh context-list "NeutronMemoryBot"</code></pre>
+
+<hr>
+
+<!-- 5. Start the Dashboard -->
+<h2>5. Start the Dashboard</h2>
+<pre><code>cd neutron-dashboard
+npm run dev</code></pre>
+
+<p>Opens at <code>http://localhost:3000</code>. Features:</p>
+<table>
+  <tr><th>Route</th><th>Method</th><th>Description</th></tr>
+  <tr><td><code>/</code></td><td>GET</td><td>Dashboard UI (stats, memories, search)</td></tr>
+  <tr><td><code>/api/neutron/memories</code></td><td>GET</td><td>List stored memories</td></tr>
+  <tr><td><code>/api/neutron/memories</code></td><td>POST</td><td>Create a new memory</td></tr>
+  <tr><td><code>/api/neutron/seeds</code></td><td>POST</td><td>Semantic search</td></tr>
+  <tr><td><code>/api/trigger/check-comments</code></td><td>POST</td><td>Trigger comment check</td></tr>
+  <tr><td><code>/api/moltbook/posts</code></td><td>GET</td><td>List Moltbook posts</td></tr>
+</table>
+
+<h3>Test Dashboard API</h3>
+<pre><code># List memories
+curl http://localhost:3000/api/neutron/memories
+
+# Semantic search
+curl -X POST http://localhost:3000/api/neutron/seeds \
+  -H "Content-Type: application/json" \
+  -d '{"query":"memory types","limit":5,"threshold":0.5}'
+
+# Create memory
+curl -X POST http://localhost:3000/api/neutron/memories \
+  -H "Content-Type: application/json" \
+  -d '{"memoryType":"episodic","data":{"test":"dashboard test"}}'</code></pre>
+
+<hr>
+
+<!-- 6. Auto-Recall and Auto-Capture -->
+<h2>6. Auto-Recall and Auto-Capture</h2>
+<p>These are OpenClaw hooks that automatically manage memory during agent conversations.</p>
+
+<table>
+  <tr><th>Hook</th><th>File</th><th>What it does</th></tr>
+  <tr><td>Auto-Recall</td><td><code>skills/.../hooks/pre-tool-use.sh</code></td><td>Queries relevant memories before each AI turn</td></tr>
+  <tr><td>Auto-Capture</td><td><code>skills/.../hooks/post-tool-use.sh</code></td><td>Saves conversation after each AI turn</td></tr>
+</table>
+
+<h3>Configuration</h3>
+<p>Both default to <strong>ON</strong>. Configure in <code>openclaw.json</code>:</p>
+<pre><code>"VANAR_AUTO_RECALL": "true",
+"VANAR_AUTO_CAPTURE": "true"</code></pre>
+
+<p>Or via environment variables:</p>
+<pre><code>export VANAR_AUTO_RECALL=false   # Disable recall
+export VANAR_AUTO_CAPTURE=false  # Disable capture</code></pre>
+
+<h3>How Auto-Recall Works</h3>
+<ol>
+  <li>User sends a message</li>
+  <li>Hook queries Neutron: <code>POST /seeds/query</code> with the user's message</li>
+  <li>Top 5 semantically similar memories are returned</li>
+  <li>Memories are injected into the AI's context as <code>RECALLED MEMORIES</code></li>
+</ol>
+
+<h3>How Auto-Capture Works</h3>
+<ol>
+  <li>AI generates a response</li>
+  <li>Hook formats: <code>User: {message}\nAssistant: {response}</code></li>
+  <li>Saves as a seed: <code>POST /seeds</code> with source <code>auto_capture</code></li>
+  <li>Runs in background (non-blocking)</li>
+</ol>
+
+<hr>
+
+<!-- 7. What Gets Saved -->
+<h2>7. What Gets Saved to Neutron</h2>
+<p>Every bot interaction saves <strong>two things</strong>:</p>
+
+<ol>
+  <li>
+    <strong>Agent Context</strong> (structured metadata)
+    <ul>
+      <li>Type: <code>episodic</code></li>
+      <li>Contains: truncated interaction summary</li>
+      <li>Use: filtering, listing, session tracking</li>
+    </ul>
+  </li>
+  <li>
+    <strong>Seed</strong> (full thread snapshot)
+    <ul>
+      <li>Contains: original post + all comments + bot reply</li>
+      <li>Use: semantic search finds relevant past conversations</li>
+      <li>Format: append-only snapshots</li>
+    </ul>
+  </li>
+</ol>
+
+<hr>
+
+<!-- 8. Troubleshooting -->
+<h2>8. Troubleshooting</h2>
+
+<h3>"NEUTRON_API_KEY not found"</h3>
+<p>Set env vars or check <code>openclaw.json</code>:</p>
+<pre><code>export NEUTRON_API_KEY=your_key
+export NEUTRON_AGENT_ID=your_agent_id</code></pre>
+
+<h3>"fetch failed" on trigger/check-all</h3>
+<div class="warn">Moltbook API is unreachable. Check connectivity:</div>
+<pre><code>curl -v https://www.moltbook.com/api/v1/posts</code></pre>
+<p>If TLS handshake hangs, it's a Moltbook server issue. The bot will retry on next poll cycle.</p>
+
+<h3>Seeds not found in search</h3>
+<div class="note">Seeds take 10-30 seconds to process after saving. Wait and retry the search.</div>
+
+<h3>CLI returns empty or errors</h3>
+<p>Verify <code>jq</code> is installed (used for JSON formatting):</p>
+<pre><code>which jq || brew install jq</code></pre>
+
+<h3>Checking server logs</h3>
+<p>The webhook server logs all interactions to stdout:</p>
+<ul>
+  <li><code>Saved to memory</code> — context saved successfully</li>
+  <li><code>Seed saved</code> — thread snapshot saved</li>
+  <li><code>Reply posted successfully</code> — Moltbook reply sent</li>
+  <li><code>Error saving to memory</code> — Neutron API issue</li>
+</ul>
+
+<hr>
+
+<!-- Quick Reference -->
+<h2>Quick Reference</h2>
+<pre><code># Test skill
+./skills/vanar-neutron-memory/scripts/neutron-memory.sh test
+
+# Start bot
+cd webhook-server &amp;&amp; node server.js
+
+# Start dashboard
+cd neutron-dashboard &amp;&amp; npm run dev
+
+# Trigger manually
+curl -X POST http://localhost:3456/trigger/check-all
+
+# Search memories
+./skills/vanar-neutron-memory/scripts/neutron-memory.sh search "your query" 10 0.5</code></pre>
+
+<script>
+  const toggle = document.getElementById('theme-switch');
+  const label = document.getElementById('theme-label');
+  const html = document.documentElement;
+
+  // Load saved preference or use system preference
+  const saved = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const isDark = saved ? saved === 'dark' : prefersDark;
+
+  html.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  toggle.checked = isDark;
+  label.textContent = isDark ? 'Dark' : 'Light';
+
+  toggle.addEventListener('change', () => {
+    const theme = toggle.checked ? 'dark' : 'light';
+    html.setAttribute('data-theme', theme);
+    label.textContent = toggle.checked ? 'Dark' : 'Light';
+    localStorage.setItem('theme', theme);
+  });
+</script>
+</body>
+</html>

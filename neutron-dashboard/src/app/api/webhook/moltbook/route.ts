@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { config } from '@/lib/config';
-import { saveThreadAsSeed } from '@/lib/neutron-seeds';
+import { saveSeed, saveThreadAsSeed } from '@/lib/neutron-cli';
 
 // In-memory store for replied comments (use Redis/DB in production)
 const repliedComments = new Set<string>();
@@ -113,23 +113,8 @@ async function postReply(postId: string, content: string) {
 
 async function saveToMemory(author: string, theirComment: string, myReply: string) {
   try {
-    const url = `${config.neutron.baseUrl}/agent-contexts?appId=${config.neutron.agentId}&externalUserId=neutron-memory-bot`;
-
-    await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${config.neutron.apiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        agentId: 'NeutronMemoryBot',
-        memoryType: 'episodic',
-        data: {
-          interaction: `Replied to ${author}: ${theirComment.substring(0, 50)}...`
-        }
-      })
-    });
-
+    const summary = `Replied to ${author}: ${theirComment.substring(0, 100)}... -> ${myReply.substring(0, 100)}...`;
+    await saveSeed(summary, `Reply to ${author} - ${new Date().toISOString().split('T')[0]}`);
     console.log('Saved to memory');
   } catch (error) {
     console.error('Failed to save to memory:', error);
