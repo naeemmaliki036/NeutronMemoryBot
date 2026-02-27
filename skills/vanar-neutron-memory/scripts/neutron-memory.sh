@@ -13,21 +13,17 @@ if ! command -v curl &> /dev/null; then
 fi
 
 if ! command -v jq &> /dev/null; then
-    echo "Warning: jq not found — JSON output will be unformatted"
+    echo "Error: jq is required but not installed"
     echo "  macOS:  brew install jq"
     echo "  Linux:  apt install jq"
-    echo ""
+    exit 1
 fi
 
 # --- Load API key — env var first, then credentials file ---
 API_KEY="${API_KEY:-${NEUTRON_API_KEY:-}}"
 
 if [[ -z "$API_KEY" ]] && [[ -f "$CONFIG_FILE" ]]; then
-    if command -v jq &> /dev/null; then
-        API_KEY=$(jq -r '.api_key // empty' "$CONFIG_FILE" 2>/dev/null)
-    else
-        API_KEY=$(grep '"api_key"' "$CONFIG_FILE" | sed 's/.*"api_key"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/')
-    fi
+    API_KEY=$(jq -r '.api_key // empty' "$CONFIG_FILE" 2>/dev/null)
 fi
 
 if [[ -z "$API_KEY" || "$API_KEY" == "null" ]]; then
@@ -47,11 +43,7 @@ fi
 # --- Helpers ---
 
 format_json() {
-    if command -v jq &> /dev/null; then
-        jq .
-    else
-        cat
-    fi
+    jq .
 }
 
 # Parse API errors into human-readable messages
@@ -100,12 +92,15 @@ case "${1:-}" in
             echo "Usage: neutron-memory save TEXT [TITLE]"
             exit 1
         fi
+        # Build form field values safely using jq (prevents JSON injection)
+        text_json=$(jq -n --arg t "$text" '[$t]')
+        title_json=$(jq -n --arg t "$title" '[$t]')
         result=$(curl -s -X POST "${API_BASE}/memory/save" \
             -H "Authorization: Bearer ${API_KEY}" \
-            -F "text=[\"${text}\"]" \
+            -F "text=${text_json}" \
             -F 'textTypes=["text"]' \
             -F 'textSources=["bot_save"]' \
-            -F "textTitles=[\"${title}\"]" 2>&1)
+            -F "textTitles=${title_json}" 2>&1)
         if check_response "$result" "$?"; then
             echo "$result" | format_json
         else
@@ -120,10 +115,22 @@ case "${1:-}" in
             echo "Usage: neutron-memory search QUERY [LIMIT] [THRESHOLD]"
             exit 1
         fi
+        # Validate numeric inputs
+        if ! [[ "$limit" =~ ^[0-9]+$ ]]; then
+            echo "Error: LIMIT must be a positive integer (got: $limit)"
+            exit 1
+        fi
+        if ! [[ "$threshold" =~ ^[0-9]*\.?[0-9]+$ ]]; then
+            echo "Error: THRESHOLD must be a number between 0 and 1 (got: $threshold)"
+            exit 1
+        fi
+        # Build JSON body safely using jq (prevents JSON injection)
+        json_body=$(jq -n --arg q "$query" --argjson l "$limit" --argjson t "$threshold" \
+            '{"query":$q,"limit":$l,"threshold":$t}')
         result=$(curl -s -X POST "${API_BASE}/memory/search" \
             -H "Authorization: Bearer ${API_KEY}" \
             -H "Content-Type: application/json" \
-            -d "{\"query\":\"${query}\",\"limit\":${limit},\"threshold\":${threshold}}" 2>&1)
+            -d "$json_body" 2>&1)
         if check_response "$result" "$?"; then
             echo "$result" | format_json
         else

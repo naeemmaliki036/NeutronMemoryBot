@@ -7,6 +7,9 @@ VANAR_AUTO_RECALL="${VANAR_AUTO_RECALL:-false}"
 
 set -euo pipefail
 
+# jq is required for safe JSON construction
+command -v jq &> /dev/null || exit 0
+
 API_BASE="${NEUTRON_API_BASE:-https://api-neutron.vanarchain.com}"
 CONFIG_FILE="${HOME}/.config/neutron/credentials.json"
 
@@ -29,11 +32,14 @@ if [[ -z "$USER_MESSAGE" ]]; then
     exit 0
 fi
 
+# Build JSON body safely using jq (prevents JSON injection)
+json_body=$(jq -n --arg q "$USER_MESSAGE" '{"query":$q,"limit":5,"threshold":0.5}')
+
 # Query for relevant memories
 response=$(curl -s -X POST "${API_BASE}/memory/search" \
     -H "Authorization: Bearer ${API_KEY}" \
     -H "Content-Type: application/json" \
-    -d "{\"query\":\"${USER_MESSAGE}\",\"limit\":5,\"threshold\":0.5}" 2>/dev/null || echo "{}")
+    -d "$json_body" 2>/dev/null || echo "{}")
 
 # Extract memories if any
 memories=$(echo "$response" | jq -r '.results[]?.content // empty' 2>/dev/null | head -500)

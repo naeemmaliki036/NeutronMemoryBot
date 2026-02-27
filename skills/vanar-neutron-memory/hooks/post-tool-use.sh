@@ -5,6 +5,9 @@
 VANAR_AUTO_CAPTURE="${VANAR_AUTO_CAPTURE:-false}"
 [[ "$VANAR_AUTO_CAPTURE" != "true" ]] && exit 0
 
+# jq is required for safe JSON construction
+command -v jq &> /dev/null || exit 0
+
 API_BASE="${NEUTRON_API_BASE:-https://api-neutron.vanarchain.com}"
 CONFIG_FILE="${HOME}/.config/neutron/credentials.json"
 
@@ -26,9 +29,13 @@ TITLE="Conversation - ${TS}"
 CONTENT="User: ${USER_MSG}
 Assistant: ${AI_RESP}"
 
+# Build form field values safely using jq (prevents JSON injection)
+text_json=$(jq -n --arg t "$CONTENT" '[$t]')
+title_json=$(jq -n --arg t "$TITLE" '[$t]')
+
 curl -s -X POST "${API_BASE}/memory/save" \
     -H "Authorization: Bearer ${API_KEY}" \
-    -F "text=[\"${CONTENT}\"]" \
+    -F "text=${text_json}" \
     -F 'textTypes=["text"]' \
     -F 'textSources=["auto_capture"]' \
-    -F "textTitles=[\"${TITLE}\"]" > /dev/null 2>&1
+    -F "textTitles=${title_json}" > /dev/null 2>&1
