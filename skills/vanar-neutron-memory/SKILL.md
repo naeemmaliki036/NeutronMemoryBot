@@ -1,22 +1,23 @@
 ---
 name: vanar-neutron-memory
-description: Your AI remembers every conversation — finds relevant context by meaning, not keywords. Fully automatic.
+description: Save and recall agent memory with semantic search. Context that persists across every session.
 user-invocable: true
 metadata: {"openclaw": {"emoji": "🧠", "requires": {"env": ["API_KEY"]}, "primaryEnv": "API_KEY"}}
 ---
 
 # Neutron Memory
 
-Your AI remembers every conversation and finds relevant context by meaning — not keywords. Save anything, search by what it means, and your agent picks up where it left off across sessions.
+Every conversation, preference, and decision your agent makes can persist across sessions. Save what matters, and when you need it, semantic search finds the right context by meaning — not keywords. No more repeating yourself. No more starting over.
 
 ## How It Works
 
-1. You talk to your AI agent
-2. **Auto-Capture** saves the conversation to memory (background, non-blocking)
-3. Next time you ask something, **Auto-Recall** finds relevant past conversations and injects them as context
-4. Your agent responds with full awareness of previous interactions
+**Manual** — save and search with simple commands:
+1. `./scripts/neutron-memory.sh save "user prefers dark mode" "Preferences"` — save context
+2. `./scripts/neutron-memory.sh search "what theme does the user like"` — find it by meaning
 
-No manual work — it just works once installed.
+**Automatic** (opt-in) — enable hooks to capture and recall automatically:
+1. **Auto-Capture** saves conversations after each AI turn
+2. **Auto-Recall** finds relevant memories before each AI turn and injects them as context
 
 ## Quick Start
 
