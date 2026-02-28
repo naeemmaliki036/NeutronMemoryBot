@@ -7,7 +7,7 @@ metadata: {"openclaw": {"emoji": "🧠", "requires": {"env": ["API_KEY"]}, "prim
 
 # Neutron Memory
 
-Every conversation, preference, and decision your agent makes can persist across sessions. Save what matters, and when you need it, semantic search finds the right context by meaning — not keywords. No more repeating yourself. No more starting over.
+Every conversation, preference, and decision your agent makes can persist across sessions. Save what matters, and when you need it, semantic search finds the right context by meaning — not keywords. Every session builds on the last.
 
 ## How It Works
 
