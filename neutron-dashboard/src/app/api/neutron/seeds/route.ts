@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { querySeeds } from '@/lib/neutron-seeds';
+import { searchSeeds } from '@/lib/neutron-cli';
 
 export async function POST(request: Request) {
   try {
@@ -13,7 +13,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const data = await querySeeds(query.trim(), limit, threshold);
+    const data = await searchSeeds(query.trim(), limit, threshold);
 
     return NextResponse.json({
       success: true,

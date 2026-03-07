@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { saveSeed } from './neutron-cli.js';
 
 dotenv.config();
 
@@ -16,11 +17,6 @@ const CONFIG = {
     apiKey: process.env.MOLTBOOK_API_KEY || 'moltbook_sk_3lD4UtQ_dUuqZlHKRGgY6c0RZxg0EjXI',
     agentId: process.env.MOLTBOOK_AGENT_ID || '97dbd813-46f2-486c-af4b-f21faf66d2b5',
     baseUrl: 'https://www.moltbook.com/api/v1'
-  },
-  neutron: {
-    apiKey: process.env.NEUTRON_API_KEY || 'nk_231d6d0dd5db7129d494607e3b7d4d965496a07b4a73ee07e8e0eeae2bfa7510',
-    agentId: process.env.NEUTRON_AGENT_ID || '5925f30c-135c-4e10-b275-edf0936ef4be',
-    baseUrl: 'https://api-neutron.vanarchain.com'
   }
 };
 
@@ -295,33 +291,18 @@ async function postReply(postId, content) {
   }
 }
 
-// Save interaction to Neutron memory
+// Save interaction summary to Neutron memory via skill CLI
 async function saveToMemory(author, theirComment, myReply) {
   try {
-    const url = `${CONFIG.neutron.baseUrl}/agent-contexts?appId=${CONFIG.neutron.agentId}&externalUserId=neutron-memory-bot`;
-
-    await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${CONFIG.neutron.apiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        agentId: 'NeutronMemoryBot',
-        memoryType: 'episodic',
-        data: {
-          interaction: `Replied to ${author}: ${theirComment.substring(0, 50)}... -> ${myReply.substring(0, 50)}...`
-        }
-      })
-    });
-
+    const summary = `Replied to ${author}: ${theirComment.substring(0, 100)}... -> ${myReply.substring(0, 100)}...`;
+    await saveSeed(summary, `Reply to ${author} - ${new Date().toISOString().split('T')[0]}`);
     console.log('Saved to memory');
   } catch (error) {
     console.error('Error saving to memory:', error);
   }
 }
 
-// Save full thread as Neutron seed for semantic search
+// Save full thread as Neutron seed via skill CLI
 async function saveThreadAsSeed(postContent, comments, botReply, replyAuthor) {
   try {
     const commentLines = comments.map(c => {
@@ -340,28 +321,8 @@ async function saveThreadAsSeed(postContent, comments, botReply, replyAuthor) {
     ].join('\n');
 
     const title = `Thread with ${replyAuthor} - ${new Date().toISOString().split('T')[0]}`;
-    const url = `${CONFIG.neutron.baseUrl}/seeds?appId=${CONFIG.neutron.agentId}&externalUserId=neutron-memory-bot`;
-
-    const formData = new FormData();
-    formData.append('text', JSON.stringify([fullText]));
-    formData.append('textTypes', JSON.stringify(['text']));
-    formData.append('textSources', JSON.stringify(['mcp']));
-    formData.append('textTitles', JSON.stringify([title]));
-
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${CONFIG.neutron.apiKey}`
-      },
-      body: formData
-    });
-
-    if (response.status === 201) {
-      const data = await response.json();
-      console.log('Seed saved, jobIds:', data.jobIds);
-    } else {
-      console.error('Seed save failed:', response.status);
-    }
+    const result = await saveSeed(fullText, title);
+    console.log('Seed saved:', result);
   } catch (error) {
     console.error('Error saving seed:', error);
   }

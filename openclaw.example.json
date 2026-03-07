@@ -3,10 +3,10 @@
     "entries": {
       "vanar-neutron-memory": {
         "enabled": true,
-        "apiKey": "YOUR_NEUTRON_API_KEY",
+        "apiKey": "YOUR_API_KEY",
         "env": {
-          "NEUTRON_AGENT_ID": "YOUR_AGENT_ID",
-          "YOUR_AGENT_IDENTIFIER": "your_agent_name_or_id"
+          "VANAR_AUTO_RECALL": "false",
+          "VANAR_AUTO_CAPTURE": "false"
         }
       }
     },
